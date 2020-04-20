@@ -11,6 +11,7 @@ import gym
 import tensorflow as tf
 import torch
 
+import tests.benchmark_helper
 from garage.envs import normalize
 from garage.experiment import deterministic, LocalRunner
 from garage.tf.algos import PPO as TF_PPO
@@ -112,7 +113,7 @@ class BenchmarkPPO:
                 factors=[hyper_parameters['batch_size']] * 2,
                 names=['garage-TF', 'garage-PT'])
 
-        Rh.write_file(result_json, 'PPO')
+        tests.benchmark_helper.write_file(result_json, 'PPO')
 
 
 def run_garage_pytorch(env, seed, log_dir):

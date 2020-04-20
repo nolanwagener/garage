@@ -8,6 +8,7 @@ import gym
 import pytest
 import tensorflow as tf
 
+import tests.benchmark_helper
 from garage.envs import normalize
 from garage.experiment import deterministic
 from garage.tf.algos import PPO
@@ -66,35 +67,35 @@ class BenchmarkCategoricalCNNPolicy:
 
             env.close()
 
-            Rh.relplot(g_csvs=garage_csvs,
-                       b_csvs=garage_model_csvs,
-                       g_x='Iteration',
-                       g_y='Evaluation/AverageReturn',
-                       g_z='Garage',
-                       b_x='Iteration',
-                       b_y='Evaluation/AverageReturn',
-                       b_z='GarageWithModel',
-                       trials=num_of_trials,
-                       seeds=seeds,
-                       plt_file=relplt_file,
-                       env_id=env_id,
-                       x_label='Iteration',
-                       y_label='Evaluation/AverageReturn')
+            tests.benchmark_helper.relplot(g_csvs=garage_csvs,
+                                           b_csvs=garage_model_csvs,
+                                           g_x='Iteration',
+                                           g_y='Evaluation/AverageReturn',
+                                           g_z='Garage',
+                                           b_x='Iteration',
+                                           b_y='Evaluation/AverageReturn',
+                                           b_z='GarageWithModel',
+                                           trials=num_of_trials,
+                                           seeds=seeds,
+                                           plt_file=relplt_file,
+                                           env_id=env_id,
+                                           x_label='Iteration',
+                                           y_label='Evaluation/AverageReturn')
 
-            Rh.plot(g_csvs=garage_csvs,
-                    b_csvs=garage_model_csvs,
-                    g_x='Iteration',
-                    g_y='Evaluation/AverageReturn',
-                    g_z='Garage',
-                    b_x='Iteration',
-                    b_y='Evaluation/AverageReturn',
-                    b_z='GarageWithModel',
-                    trials=num_of_trials,
-                    seeds=seeds,
-                    plt_file=plt_file,
-                    env_id=env_id,
-                    x_label='Iteration',
-                    y_label='Evaluation/AverageReturn')
+            tests.benchmark_helper.plot(g_csvs=garage_csvs,
+                                        b_csvs=garage_model_csvs,
+                                        g_x='Iteration',
+                                        g_y='Evaluation/AverageReturn',
+                                        g_z='Garage',
+                                        b_x='Iteration',
+                                        b_y='Evaluation/AverageReturn',
+                                        b_z='GarageWithModel',
+                                        trials=num_of_trials,
+                                        seeds=seeds,
+                                        plt_file=plt_file,
+                                        env_id=env_id,
+                                        x_label='Iteration',
+                                        y_label='Evaluation/AverageReturn')
 
 
 def run_garage(env, seed, log_dir):

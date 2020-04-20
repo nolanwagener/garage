@@ -8,6 +8,7 @@ import gym
 import pytest
 import tensorflow as tf
 
+import tests.benchmark_helper
 from garage.envs import normalize
 from garage.experiment import deterministic
 from garage.np.baselines import LinearFeatureBaseline
@@ -69,37 +70,37 @@ class BenchmarkCategoricalLSTMPolicy:
 
             env.close()
 
-            Rh.plot(b_csvs=garage_models_csvs,
-                    g_csvs=garage_csvs,
-                    g_x='Iteration',
-                    g_y='Evaluation/AverageReturn',
-                    g_z='garage',
-                    b_x='Iteration',
-                    b_y='Evaluation/AverageReturn',
-                    b_z='garage_model',
-                    trials=3,
-                    seeds=seeds,
-                    plt_file=plt_file,
-                    env_id=env_id,
-                    x_label='Iteration',
-                    y_label='Evaluation/AverageReturn')
+            tests.benchmark_helper.plot(b_csvs=garage_models_csvs,
+                                        g_csvs=garage_csvs,
+                                        g_x='Iteration',
+                                        g_y='Evaluation/AverageReturn',
+                                        g_z='garage',
+                                        b_x='Iteration',
+                                        b_y='Evaluation/AverageReturn',
+                                        b_z='garage_model',
+                                        trials=3,
+                                        seeds=seeds,
+                                        plt_file=plt_file,
+                                        env_id=env_id,
+                                        x_label='Iteration',
+                                        y_label='Evaluation/AverageReturn')
 
-            Rh.relplot(b_csvs=garage_models_csvs,
-                       g_csvs=garage_csvs,
-                       g_x='Iteration',
-                       g_y='Evaluation/AverageReturn',
-                       g_z='garage',
-                       b_x='Iteration',
-                       b_y='Evaluation/AverageReturn',
-                       b_z='garage_model',
-                       trials=3,
-                       seeds=seeds,
-                       plt_file=mean_plt_file,
-                       env_id=env_id,
-                       x_label='Iteration',
-                       y_label='Evaluation/AverageReturn')
+            tests.benchmark_helper.relplot(b_csvs=garage_models_csvs,
+                                           g_csvs=garage_csvs,
+                                           g_x='Iteration',
+                                           g_y='Evaluation/AverageReturn',
+                                           g_z='garage',
+                                           b_x='Iteration',
+                                           b_y='Evaluation/AverageReturn',
+                                           b_z='garage_model',
+                                           trials=3,
+                                           seeds=seeds,
+                                           plt_file=mean_plt_file,
+                                           env_id=env_id,
+                                           x_label='Iteration',
+                                           y_label='Evaluation/AverageReturn')
 
-            result_json[env_id] = Rh.create_json(
+            result_json[env_id] = tests.benchmark_helper.create_json_file(
                 b_csvs=garage_models_csvs,
                 g_csvs=garage_csvs,
                 seeds=seeds,
@@ -111,7 +112,7 @@ class BenchmarkCategoricalLSTMPolicy:
                 factor_g=2048,
                 factor_b=2048)
 
-        Rh.write_file(result_json, 'PPO')
+        tests.benchmark_helper.write_file(result_json, 'PPO')
 
 
 def run_garage(env, seed, log_dir):

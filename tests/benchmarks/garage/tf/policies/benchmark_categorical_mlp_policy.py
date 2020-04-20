@@ -14,6 +14,7 @@ import gym
 import pytest
 import tensorflow as tf
 
+import tests.benchmark_helper
 from garage.envs import normalize
 from garage.experiment import deterministic
 from garage.np.baselines import LinearFeatureBaseline
@@ -70,37 +71,37 @@ class BenchmarkCategoricalMLPPolicy:
 
             env.close()
 
-            Rh.plot(b_csvs=garage_csvs,
-                    g_csvs=garage_csvs,
-                    g_x='Iteration',
-                    g_y='Evaluation/AverageReturn',
-                    g_z='Garage',
-                    b_x='Iteration',
-                    b_y='Evaluation/AverageReturn',
-                    b_z='Garage',
-                    trials=trials,
-                    seeds=seeds,
-                    plt_file=plt_file,
-                    env_id=env_id,
-                    x_label='Iteration',
-                    y_label='Evaluation/AverageReturn')
+            tests.benchmark_helper.plot(b_csvs=garage_csvs,
+                                        g_csvs=garage_csvs,
+                                        g_x='Iteration',
+                                        g_y='Evaluation/AverageReturn',
+                                        g_z='Garage',
+                                        b_x='Iteration',
+                                        b_y='Evaluation/AverageReturn',
+                                        b_z='Garage',
+                                        trials=trials,
+                                        seeds=seeds,
+                                        plt_file=plt_file,
+                                        env_id=env_id,
+                                        x_label='Iteration',
+                                        y_label='Evaluation/AverageReturn')
 
-            Rh.relplot(b_csvs=garage_csvs,
-                       g_csvs=garage_csvs,
-                       g_x='Iteration',
-                       g_y='Evaluation/AverageReturn',
-                       g_z='Garage',
-                       b_x='Iteration',
-                       b_y='Evaluation/AverageReturn',
-                       b_z='Garage',
-                       trials=trials,
-                       seeds=seeds,
-                       plt_file=relplt_file,
-                       env_id=env_id,
-                       x_label='Iteration',
-                       y_label='Evaluation/AverageReturn')
+            tests.benchmark_helper.relplot(b_csvs=garage_csvs,
+                                           g_csvs=garage_csvs,
+                                           g_x='Iteration',
+                                           g_y='Evaluation/AverageReturn',
+                                           g_z='Garage',
+                                           b_x='Iteration',
+                                           b_y='Evaluation/AverageReturn',
+                                           b_z='Garage',
+                                           trials=trials,
+                                           seeds=seeds,
+                                           plt_file=relplt_file,
+                                           env_id=env_id,
+                                           x_label='Iteration',
+                                           y_label='Evaluation/AverageReturn')
 
-            result_json[env_id] = Rh.create_json(
+            result_json[env_id] = tests.benchmark_helper.create_json_file(
                 b_csvs=garage_csvs,
                 g_csvs=garage_csvs,
                 seeds=seeds,

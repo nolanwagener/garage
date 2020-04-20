@@ -40,6 +40,7 @@ class GaussianMLPValueFunction(ValueFunction):
             (plain value - not log or exponentiated).
         layer_normalization (bool): Bool for using layer normalization or not.
         name (str): The name of the value function.
+
     """
 
     def __init__(self,

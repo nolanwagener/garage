@@ -18,6 +18,9 @@ from dowel import logger as dowel_logger
 import gtimer as gt
 import gym
 import pytest
+
+import tests.benchmark_helper
+
 try:
     from rlkit.data_management.env_replay_buffer import EnvReplayBuffer
     from rlkit.envs.wrappers import NormalizedBoxEnv
@@ -128,22 +131,22 @@ class BenchmarkTD3:
                 garage_csvs.append(garage_csv)
                 rlkit_csvs.append(rlkit_csv)
 
-            Rh.plot(b_csvs=rlkit_csvs,
-                    g_csvs=garage_csvs,
-                    g_x='Epoch',
-                    g_y='Evaluation/AverageReturn',
-                    g_z='garage',
-                    b_x='Epoch',
-                    b_y='evaluation/Average Returns',
-                    b_z='rlkit',
-                    trials=task['trials'],
-                    seeds=seeds,
-                    plt_file=plt_file,
-                    env_id=env_id,
-                    x_label='Iteration',
-                    y_label='Evaluation/AverageReturn')
+            tests.benchmark_helper.plot(b_csvs=rlkit_csvs,
+                                        g_csvs=garage_csvs,
+                                        g_x='Epoch',
+                                        g_y='Evaluation/AverageReturn',
+                                        g_z='garage',
+                                        b_x='Epoch',
+                                        b_y='evaluation/Average Returns',
+                                        b_z='rlkit',
+                                        trials=task['trials'],
+                                        seeds=seeds,
+                                        plt_file=plt_file,
+                                        env_id=env_id,
+                                        x_label='Iteration',
+                                        y_label='Evaluation/AverageReturn')
 
-            result_json[env_id] = Rh.create_json(
+            result_json[env_id] = tests.benchmark_helper.create_json_file(
                 b_csvs=rlkit_csvs,
                 g_csvs=garage_csvs,
                 seeds=seeds,
@@ -155,7 +158,7 @@ class BenchmarkTD3:
                 factor_g=1,
                 factor_b=1)
 
-        Rh.write_file(result_json, 'TD3')
+        tests.benchmark_helper.write_file(result_json, 'TD3')
 
     test_benchmark_td3.huge = True
 

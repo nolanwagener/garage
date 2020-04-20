@@ -23,6 +23,7 @@ import gym
 import pytest
 import tensorflow as tf
 
+import tests.benchmark_helper
 from garage.envs import normalize
 from garage.experiment import deterministic
 from garage.np.exploration_strategies import OUStrategy
@@ -100,37 +101,37 @@ def benchmark_ddpg():
 
         env.close()
 
-        Rh.plot(b_csvs=baselines_csvs,
-                g_csvs=garage_csvs,
-                g_x='Epoch',
-                g_y='Evaluation/AverageReturn',
-                g_z='Garage',
-                b_x='total/epochs',
-                b_y='rollout/return',
-                b_z='Baseline',
-                trials=task['trials'],
-                seeds=seeds,
-                plt_file=plt_file,
-                env_id=env_id,
-                x_label='Epoch',
-                y_label='Evaluation/AverageReturn')
+        tests.benchmark_helper.plot(b_csvs=baselines_csvs,
+                                    g_csvs=garage_csvs,
+                                    g_x='Epoch',
+                                    g_y='Evaluation/AverageReturn',
+                                    g_z='Garage',
+                                    b_x='total/epochs',
+                                    b_y='rollout/return',
+                                    b_z='Baseline',
+                                    trials=task['trials'],
+                                    seeds=seeds,
+                                    plt_file=plt_file,
+                                    env_id=env_id,
+                                    x_label='Epoch',
+                                    y_label='Evaluation/AverageReturn')
 
-        Rh.relplot(g_csvs=garage_csvs,
-                   b_csvs=baselines_csvs,
-                   g_x='Epoch',
-                   g_y='Evaluation/AverageReturn',
-                   g_z='Garage',
-                   b_x='total/epochs',
-                   b_y='rollout/return',
-                   b_z='Baseline',
-                   trials=task['trials'],
-                   seeds=seeds,
-                   plt_file=relplt_file,
-                   env_id=env_id,
-                   x_label='Epoch',
-                   y_label='Evaluation/AverageReturn')
+        tests.benchmark_helper.relplot(g_csvs=garage_csvs,
+                                       b_csvs=baselines_csvs,
+                                       g_x='Epoch',
+                                       g_y='Evaluation/AverageReturn',
+                                       g_z='Garage',
+                                       b_x='total/epochs',
+                                       b_y='rollout/return',
+                                       b_z='Baseline',
+                                       trials=task['trials'],
+                                       seeds=seeds,
+                                       plt_file=relplt_file,
+                                       env_id=env_id,
+                                       x_label='Epoch',
+                                       y_label='Evaluation/AverageReturn')
 
-        result_json[env_id] = Rh.create_json(
+        result_json[env_id] = tests.benchmark_helper.create_json_file(
             b_csvs=baselines_csvs,
             g_csvs=garage_csvs,
             seeds=seeds,
@@ -142,7 +143,7 @@ def benchmark_ddpg():
             factor_g=params['steps_per_epoch'] * params['n_rollout_steps'],
             factor_b=1)
 
-    Rh.write_file(result_json, 'DDPG')
+    tests.benchmark_helper.write_file(result_json, 'DDPG')
 
 
 def run_garage(env, seed, log_dir):
