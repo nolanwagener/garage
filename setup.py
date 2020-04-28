@@ -17,7 +17,7 @@ REQUIRED = [
     'cma==2.7.0',
     'dowel==0.0.3',
     'gym[atari,box2d,classic_control]' + GYM_VERSION,
-    'joblib<0.13,>=0.12',
+    'joblib',
     'numpy>=1.14.5',
     'psutil',
     # Pyglet 1.4.0 introduces some api change which breaks some
@@ -33,7 +33,7 @@ REQUIRED = [
     'tensorflow',
     'tensorflow-probability',
     'torch>=1.0.0,<1.5.0',
-    'torchvision>=0.2.1',
+    'torchvision>=0.2.1,<0.6.0',
 ]
 
 # Dependencies for optional features
