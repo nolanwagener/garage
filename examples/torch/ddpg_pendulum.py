@@ -32,12 +32,12 @@ def run_task(snapshot_config, *_):
     runner = LocalRunner(snapshot_config)
     env = GarageEnv(normalize(gym.make('InvertedDoublePendulum-v2')))
 
-    action_noise = OUStrategy(env.spec, sigma=0.2)
-
     policy = DeterministicMLPPolicy(env_spec=env.spec,
                                     hidden_sizes=[64, 64],
                                     hidden_nonlinearity=F.relu,
                                     output_nonlinearity=torch.tanh)
+
+    action_noise = OUStrategy(env.spec, policy, sigma=0.2)
 
     qf = ContinuousMLPQFunction(env_spec=env.spec,
                                 hidden_sizes=[64, 64],

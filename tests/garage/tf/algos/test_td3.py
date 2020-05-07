@@ -23,14 +23,15 @@ class TestTD3(TfGraphTestCase):
         with LocalTFRunner(snapshot_config) as runner:
             env = TfEnv(gym.make('InvertedDoublePendulum-v2'))
 
-            action_noise = GaussianStrategy(env.spec,
-                                            max_sigma=0.1,
-                                            min_sigma=0.1)
-
             policy = ContinuousMLPPolicy(env_spec=env.spec,
                                          hidden_sizes=[400, 300],
                                          hidden_nonlinearity=tf.nn.relu,
                                          output_nonlinearity=tf.nn.tanh)
+
+            action_noise = GaussianStrategy(env.spec,
+                                            policy,
+                                            max_sigma=0.1,
+                                            min_sigma=0.1)
 
             qf = ContinuousMLPQFunction(name='ContinuousMLPQFunction',
                                         env_spec=env.spec,

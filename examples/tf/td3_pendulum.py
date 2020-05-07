@@ -12,7 +12,7 @@ import gym
 import tensorflow as tf
 
 from garage.experiment import run_experiment
-from garage.np.exploration_strategies.gaussian_strategy import GaussianStrategy
+from garage.np.exploration_strategies import GaussianStrategy
 from garage.replay_buffer import SimpleReplayBuffer
 from garage.tf.algos import TD3
 from garage.tf.envs import TfEnv
@@ -33,12 +33,15 @@ def run_task(snapshot_config, *_):
     with LocalTFRunner(snapshot_config) as runner:
         env = TfEnv(gym.make('InvertedDoublePendulum-v2'))
 
-        action_noise = GaussianStrategy(env.spec, max_sigma=0.1, min_sigma=0.1)
-
         policy = ContinuousMLPPolicy(env_spec=env.spec,
                                      hidden_sizes=[400, 300],
                                      hidden_nonlinearity=tf.nn.relu,
                                      output_nonlinearity=tf.nn.tanh)
+
+        action_noise = GaussianStrategy(env.spec,
+                                        policy,
+                                        max_sigma=0.1,
+                                        min_sigma=0.1)
 
         qf = ContinuousMLPQFunction(name='ContinuousMLPQFunction',
                                     env_spec=env.spec,

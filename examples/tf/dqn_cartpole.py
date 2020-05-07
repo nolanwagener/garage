@@ -37,6 +37,7 @@ def run_task(snapshot_config, *_):
         policy = DiscreteQfDerivedPolicy(env_spec=env.spec, qf=qf)
         epilson_greedy_strategy = EpsilonGreedyStrategy(
             env_spec=env.spec,
+            policy=policy,
             total_timesteps=num_timesteps,
             max_epsilon=1.0,
             min_epsilon=0.02,

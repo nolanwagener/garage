@@ -32,8 +32,6 @@ def run_task(snapshot_config, *_):
     with LocalTFRunner(snapshot_config=snapshot_config) as runner:
         env = TfEnv(gym.make('FetchReach-v1'))
 
-        action_noise = OUStrategy(env.spec, sigma=0.2)
-
         policy = ContinuousMLPPolicy(
             env_spec=env.spec,
             name='Policy',
@@ -41,6 +39,8 @@ def run_task(snapshot_config, *_):
             hidden_nonlinearity=tf.nn.relu,
             output_nonlinearity=tf.nn.tanh,
         )
+
+        action_noise = OUStrategy(env.spec, policy, sigma=0.2)
 
         qf = ContinuousMLPQFunction(
             env_spec=env.spec,

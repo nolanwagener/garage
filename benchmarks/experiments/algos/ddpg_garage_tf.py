@@ -46,13 +46,15 @@ def ddpg_garage_tf(ctxt, env_id, seed):
     with LocalTFRunner(ctxt) as runner:
         env = TfEnv(normalize(gym.make(env_id)))
 
-        action_noise = OUStrategy(env.spec, sigma=hyper_parameters['sigma'])
-
         policy = ContinuousMLPPolicy(
             env_spec=env.spec,
             hidden_sizes=hyper_parameters['policy_hidden_sizes'],
             hidden_nonlinearity=tf.nn.relu,
             output_nonlinearity=tf.nn.tanh)
+
+        action_noise = OUStrategy(env.spec,
+                                  policy,
+                                  sigma=hyper_parameters['sigma'])
 
         qf = ContinuousMLPQFunction(
             env_spec=env.spec,

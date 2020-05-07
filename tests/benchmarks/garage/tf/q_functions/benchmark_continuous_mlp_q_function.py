@@ -118,7 +118,6 @@ def run_garage(env, seed, log_dir):
     with LocalTFRunner(snapshot_config, sess=sess, max_cpus=12) as runner:
         env = TfEnv(normalize(env))
         # Set up params for ddpg
-        action_noise = OUStrategy(env.spec, sigma=params['sigma'])
 
         policy = ContinuousMLPPolicy(
             env_spec=env.spec,
@@ -126,6 +125,8 @@ def run_garage(env, seed, log_dir):
             hidden_sizes=params['policy_hidden_sizes'],
             hidden_nonlinearity=tf.nn.relu,
             output_nonlinearity=tf.nn.tanh)
+
+        action_noise = OUStrategy(env.spec, policy, sigma=params['sigma'])
 
         qf = ContinuousMLPQFunction(env_spec=env.spec,
                                     hidden_sizes=params['qf_hidden_sizes'],

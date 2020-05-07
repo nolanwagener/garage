@@ -72,7 +72,7 @@ class OffPolicyRLAlgorithm(RLAlgorithm):
         self.smooth_return = smooth_return
         self.max_path_length = max_path_length
         self.max_eval_path_length = max_eval_path_length
-        self.es = exploration_strategy
+        self.exploration_strategy = exploration_strategy
 
         self.sampler_cls = OffPolicyVectorizedSampler
 

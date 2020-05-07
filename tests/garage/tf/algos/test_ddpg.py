@@ -24,11 +24,11 @@ class TestDDPG(TfGraphTestCase):
         """Test DDPG with Pendulum environment."""
         with LocalTFRunner(snapshot_config, sess=self.sess) as runner:
             env = TfEnv(gym.make('InvertedDoublePendulum-v2'))
-            action_noise = OUStrategy(env.spec, sigma=0.2)
             policy = ContinuousMLPPolicy(env_spec=env.spec,
                                          hidden_sizes=[64, 64],
                                          hidden_nonlinearity=tf.nn.relu,
                                          output_nonlinearity=tf.nn.tanh)
+            action_noise = OUStrategy(env.spec, policy, sigma=0.2)
             qf = ContinuousMLPQFunction(env_spec=env.spec,
                                         hidden_sizes=[64, 64],
                                         hidden_nonlinearity=tf.nn.relu)
@@ -63,11 +63,11 @@ class TestDDPG(TfGraphTestCase):
         """
         with LocalTFRunner(snapshot_config, sess=self.sess) as runner:
             env = TfEnv(normalize(gym.make('InvertedPendulum-v2')))
-            action_noise = OUStrategy(env.spec, sigma=0.2)
             policy = ContinuousMLPPolicy(env_spec=env.spec,
                                          hidden_sizes=[64, 64],
                                          hidden_nonlinearity=tf.nn.relu,
                                          output_nonlinearity=tf.nn.tanh)
+            action_noise = OUStrategy(env.spec, policy, sigma=0.2)
             qf = ContinuousMLPQFunction(env_spec=env.spec,
                                         hidden_sizes=[64, 64],
                                         hidden_nonlinearity=tf.nn.relu)
@@ -102,11 +102,11 @@ class TestDDPG(TfGraphTestCase):
         """
         with LocalTFRunner(snapshot_config, sess=self.sess) as runner:
             env = TfEnv(normalize(gym.make('InvertedPendulum-v2')))
-            action_noise = OUStrategy(env.spec, sigma=0.2)
             policy = ContinuousMLPPolicy(env_spec=env.spec,
                                          hidden_sizes=[64, 64],
                                          hidden_nonlinearity=tf.nn.relu,
                                          output_nonlinearity=tf.nn.tanh)
+            action_noise = OUStrategy(env.spec, policy, sigma=0.2)
             qf = ContinuousMLPQFunction(env_spec=env.spec,
                                         hidden_sizes=[64, 64],
                                         hidden_nonlinearity=tf.nn.relu)

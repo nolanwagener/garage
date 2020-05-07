@@ -1,3 +1,4 @@
+"""Benchmark ContinuousMLPPolicy."""
 import datetime
 import os
 import os.path as osp
@@ -7,7 +8,6 @@ from baselines.bench import benchmarks
 import dowel
 from dowel import logger as dowel_logger
 import gym
-import pytest
 import tensorflow as tf
 
 from garage.envs import normalize
@@ -41,65 +41,68 @@ params = {
 num_of_trials = 5
 
 
-class BenchmarkContinuousMLPPolicy:
-    '''Benchmark ContinuousMLPPolicy.'''
+def benchmark_continuous_mlp_policy():
+    """Benchmark ContinuousMLPPolicy."""
+    mujoco1m = benchmarks.get_benchmark('Mujoco1M')
 
-    def benchmark_continuous_mlp_policy(self):
-        mujoco1m = benchmarks.get_benchmark('Mujoco1M')
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')
+    benchmark_dir = osp.join(os.getcwd(), 'data', 'local', 'benchmarks',
+                             'continuous_mlp_policy', timestamp)
+    for task in mujoco1m['tasks']:
+        env_id = task['env_id']
+        env = gym.make(env_id)
 
-        timestamp = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')
-        benchmark_dir = osp.join(os.getcwd(), 'data', 'local', 'benchmarks',
-                                 'continuous_mlp_policy', timestamp)
-        for task in mujoco1m['tasks']:
-            env_id = task['env_id']
-            env = gym.make(env_id)
+        seeds = random.sample(range(100), num_of_trials)
 
-            seeds = random.sample(range(100), num_of_trials)
+        task_dir = osp.join(benchmark_dir, env_id)
+        plt_file = osp.join(
+            benchmark_dir,
+            '{}_benchmark_continuous_mlp_policy.png'.format(env_id))
+        garage_csvs = []
 
-            task_dir = osp.join(benchmark_dir, env_id)
-            plt_file = osp.join(
-                benchmark_dir,
-                '{}_benchmark_continuous_mlp_policy.png'.format(env_id))
-            garage_csvs = []
+        for trial in range(num_of_trials):
+            seed = seeds[trial]
 
-            for trial in range(num_of_trials):
-                seed = seeds[trial]
+            trial_dir = task_dir + '/trial_%d_seed_%d' % (trial + 1, seed)
+            garage_dir = trial_dir + '/garage'
 
-                trial_dir = task_dir + '/trial_%d_seed_%d' % (trial + 1, seed)
-                garage_dir = trial_dir + '/garage'
+            with tf.Graph().as_default():
+                env.reset()
+                garage_csv = run_garage(env, seed, garage_dir)
+            garage_csvs.append(garage_csv)
 
-                with tf.Graph().as_default():
-                    env.reset()
-                    garage_csv = run_garage(env, seed, garage_dir)
-                garage_csvs.append(garage_csv)
+        env.close()
 
-            env.close()
-
-            Rh.relplot(g_csvs=garage_csvs,
-                       b_csvs=[],
-                       g_x='Epoch',
-                       g_y='Evaluation/AverageReturn',
-                       g_z='Garage',
-                       b_x=None,
-                       b_y=None,
-                       b_z=None,
-                       trials=num_of_trials,
-                       seeds=seeds,
-                       plt_file=plt_file,
-                       env_id=env_id,
-                       x_label='Iteration',
-                       y_label='Evaluation/AverageReturn')
+        Rh.relplot(g_csvs=garage_csvs,
+                   b_csvs=[],
+                   g_x='Epoch',
+                   g_y='Evaluation/AverageReturn',
+                   g_z='Garage',
+                   b_x=None,
+                   b_y=None,
+                   b_z=None,
+                   trials=num_of_trials,
+                   seeds=seeds,
+                   plt_file=plt_file,
+                   env_id=env_id,
+                   x_label='Iteration',
+                   y_label='Evaluation/AverageReturn')
 
 
 def run_garage(env, seed, log_dir):
-    '''
-    Create garage model and training.
+    """Create garage model and training.
+
     Replace the ddpg with the algorithm you want to run.
-    :param env: Environment of the task.
-    :param seed: Random seed for the trial.
-    :param log_dir: Log dir path.
-    :return:
-    '''
+
+    Args:
+        env (gym.Env): Environment of the task.
+        seed (int): Random seed for the trial.
+        log_dir (str): Log dir path.
+
+    Returns:
+        str: Path to the tabular log file.
+
+    """
     deterministic.set_seed(seed)
     config = tf.compat.v1.ConfigProto(allow_soft_placement=True,
                                       intra_op_parallelism_threads=12,
@@ -108,14 +111,14 @@ def run_garage(env, seed, log_dir):
     with LocalTFRunner(snapshot_config, sess=sess, max_cpus=12) as runner:
         env = TfEnv(normalize(env))
         # Set up params for ddpg
-        action_noise = OUStrategy(env.spec, sigma=params['sigma'])
-
         policy = ContinuousMLPPolicy(
             env_spec=env.spec,
             name='ContinuousMLPPolicy',
             hidden_sizes=params['policy_hidden_sizes'],
             hidden_nonlinearity=tf.nn.relu,
             output_nonlinearity=tf.nn.tanh)
+
+        action_noise = OUStrategy(env.spec, policy, sigma=params['sigma'])
 
         qf = ContinuousMLPQFunction(env_spec=env.spec,
                                     hidden_sizes=params['qf_hidden_sizes'],

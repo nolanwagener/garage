@@ -37,12 +37,12 @@ def ddpg_pendulum(ctxt=None, seed=1):
     with LocalTFRunner(snapshot_config=ctxt) as runner:
         env = TfEnv(gym.make('InvertedDoublePendulum-v2'))
 
-        action_noise = OUStrategy(env.spec, sigma=0.2)
-
         policy = ContinuousMLPPolicy(env_spec=env.spec,
                                      hidden_sizes=[64, 64],
                                      hidden_nonlinearity=tf.nn.relu,
                                      output_nonlinearity=tf.nn.tanh)
+
+        action_noise = OUStrategy(env.spec, policy, sigma=0.2)
 
         qf = ContinuousMLPQFunction(env_spec=env.spec,
                                     hidden_sizes=[64, 64],
