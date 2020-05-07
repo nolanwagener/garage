@@ -2,10 +2,10 @@
 import gym
 import numpy as np
 
-from garage.np.exploration_strategies.base import ExplorationStrategy
+from garage.np.exploration_policies.exploration_policy import ExplorationPolicy
 
 
-class GaussianStrategy(ExplorationStrategy):
+class GaussianPolicy(ExplorationPolicy):
     """Add Gaussian noise to the action taken by the deterministic policy.
 
     Args:

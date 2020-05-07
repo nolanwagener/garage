@@ -1,10 +1,10 @@
-"""Exploration Strategy API used by off-policy algorithms."""
+"""Exploration Policy API used by off-policy algorithms."""
 import abc
 
 
 # This should be an ABC inheritting from garage.Policy, but that doesn't exist
 # yet.
-class ExplorationStrategy(abc.ABC):
+class ExplorationPolicy(abc.ABC):
     """Policy that wraps another policy to add action noise.
 
     Args:

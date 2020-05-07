@@ -12,7 +12,7 @@ from torch.nn import functional as F  # NOQA
 from garage.envs import normalize
 from garage.envs.base import GarageEnv
 from garage.experiment import LocalRunner, run_experiment
-from garage.np.exploration_strategies import OUStrategy
+from garage.np.exploration_policies import OUPolicy
 from garage.replay_buffer import SimpleReplayBuffer
 from garage.torch.algos import DDPG
 from garage.torch.policies import DeterministicMLPPolicy
@@ -37,7 +37,7 @@ def run_task(snapshot_config, *_):
                                     hidden_nonlinearity=F.relu,
                                     output_nonlinearity=torch.tanh)
 
-    action_noise = OUStrategy(env.spec, policy, sigma=0.2)
+    exploration_policy = OUPolicy(env.spec, policy, sigma=0.2)
 
     qf = ContinuousMLPQFunction(env_spec=env.spec,
                                 hidden_sizes=[64, 64],
@@ -56,7 +56,7 @@ def run_task(snapshot_config, *_):
                 steps_per_epoch=20,
                 n_train_steps=50,
                 min_buffer_size=int(1e4),
-                exploration_strategy=action_noise,
+                exploration_policy=exploration_policy,
                 target_update_tau=1e-2,
                 discount=0.9,
                 policy_optimizer=policy_optimizer,

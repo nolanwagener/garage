@@ -4,10 +4,10 @@ Random exploration according to the value of epsilon.
 """
 import numpy as np
 
-from garage.np.exploration_strategies.base import ExplorationStrategy
+from garage.np.exploration_policies.exploration_policy import ExplorationPolicy
 
 
-class EpsilonGreedyStrategy(ExplorationStrategy):
+class EpsilonGreedyPolicy(ExplorationPolicy):
     """ϵ-greedy exploration strategy.
 
     Select action based on the value of ϵ. ϵ will decrease from

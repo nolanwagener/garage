@@ -5,7 +5,7 @@ import tensorflow as tf
 from garage import wrap_experiment
 from garage.envs import normalize
 from garage.experiment import deterministic
-from garage.np.exploration_strategies import OUStrategy
+from garage.np.exploration_policies import OUPolicy
 from garage.replay_buffer import HerReplayBuffer
 from garage.tf.algos import DDPG
 from garage.tf.envs import TfEnv
@@ -53,9 +53,9 @@ def her_garage_tf(ctxt, env_id, seed):
             output_nonlinearity=tf.nn.tanh,
         )
 
-        action_noise = OUStrategy(env_spec=env.spec,
-                                  policy=policy,
-                                  sigma=hyper_parameters['sigma'])
+        exploration_policy = OUPolicy(env_spec=env.spec,
+                                      policy=policy,
+                                      sigma=hyper_parameters['sigma'])
 
         qf = ContinuousMLPQFunction(
             env_spec=env.spec,
@@ -82,7 +82,7 @@ def her_garage_tf(ctxt, env_id, seed):
             target_update_tau=hyper_parameters['tau'],
             n_train_steps=hyper_parameters['n_train_steps'],
             discount=hyper_parameters['discount'],
-            exploration_strategy=action_noise,
+            exploration_policy=exploration_policy,
             policy_optimizer=tf.compat.v1.train.AdamOptimizer,
             qf_optimizer=tf.compat.v1.train.AdamOptimizer,
             buffer_batch_size=256,

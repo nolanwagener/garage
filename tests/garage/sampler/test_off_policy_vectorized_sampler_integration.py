@@ -4,7 +4,7 @@ import pytest
 import tensorflow as tf
 
 from garage.envs import normalize
-from garage.np.exploration_strategies import OUStrategy
+from garage.np.exploration_policies import OUPolicy
 from garage.replay_buffer import SimpleReplayBuffer
 from garage.sampler import OffPolicyVectorizedSampler
 from garage.tf.algos import DDPG
@@ -30,7 +30,7 @@ class TestOffPolicyVectorizedSampler(TfGraphTestCase):
                                          hidden_sizes=[64, 64],
                                          hidden_nonlinearity=tf.nn.relu,
                                          output_nonlinearity=tf.nn.tanh)
-            action_noise = OUStrategy(env.spec, policy, sigma=0.2)
+            exploration_policy = OUPolicy(env.spec, policy, sigma=0.2)
             qf = ContinuousMLPQFunction(env_spec=env.spec,
                                         hidden_sizes=[64, 64],
                                         hidden_nonlinearity=tf.nn.relu)
@@ -48,7 +48,7 @@ class TestOffPolicyVectorizedSampler(TfGraphTestCase):
                 n_train_steps=50,
                 discount=0.9,
                 min_buffer_size=int(1e4),
-                exploration_strategy=action_noise,
+                exploration_policy=exploration_policy,
             )
 
             sampler = OffPolicyVectorizedSampler(algo, env, 1, no_reset=True)

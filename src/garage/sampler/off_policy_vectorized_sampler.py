@@ -85,7 +85,7 @@ class OffPolicyVectorizedSampler(BatchSampler):
                 with base class.
 
         Raises:
-            ValueError: If the algorithm doesn't have an exploration_strategy
+            ValueError: If the algorithm doesn't have an exploration_policy
                 field.
 
         Returns:
@@ -103,10 +103,10 @@ class OffPolicyVectorizedSampler(BatchSampler):
         running_paths = [None] * self._vec_env.num_envs
         n_samples = 0
 
-        policy = self.algo.exploration_strategy
+        policy = self.algo.exploration_policy
         if policy is None:
             raise ValueError('OffPolicyVectoriizedSampler should only be used '
-                             'with an exploration_strategy.')
+                             'with an exploration_policy.')
         while n_samples < batch_size:
             policy.reset(completes)
             obs_space = self.algo.env_spec.observation_space

@@ -12,7 +12,7 @@ import gym
 import tensorflow as tf
 
 from garage.experiment import run_experiment
-from garage.np.exploration_strategies import GaussianStrategy
+from garage.np.exploration_policies import GaussianPolicy
 from garage.replay_buffer import SimpleReplayBuffer
 from garage.tf.algos import TD3
 from garage.tf.envs import TfEnv
@@ -38,10 +38,10 @@ def run_task(snapshot_config, *_):
                                      hidden_nonlinearity=tf.nn.relu,
                                      output_nonlinearity=tf.nn.tanh)
 
-        action_noise = GaussianStrategy(env.spec,
-                                        policy,
-                                        max_sigma=0.1,
-                                        min_sigma=0.1)
+        exploration_policy = GaussianPolicy(env.spec,
+                                            policy,
+                                            max_sigma=0.1,
+                                            min_sigma=0.1)
 
         qf = ContinuousMLPQFunction(name='ContinuousMLPQFunction',
                                     env_spec=env.spec,
@@ -73,7 +73,7 @@ def run_task(snapshot_config, *_):
                   discount=0.99,
                   buffer_batch_size=100,
                   min_buffer_size=1e4,
-                  exploration_strategy=action_noise,
+                  exploration_policy=exploration_policy,
                   policy_optimizer=tf.compat.v1.train.AdamOptimizer,
                   qf_optimizer=tf.compat.v1.train.AdamOptimizer)
 

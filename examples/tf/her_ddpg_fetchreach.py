@@ -11,7 +11,7 @@ import gym
 import tensorflow as tf
 
 from garage.experiment import run_experiment
-from garage.np.exploration_strategies import OUStrategy
+from garage.np.exploration_policies import OUPolicy
 from garage.replay_buffer import HerReplayBuffer
 from garage.tf.algos import DDPG
 from garage.tf.envs import TfEnv
@@ -40,7 +40,7 @@ def run_task(snapshot_config, *_):
             output_nonlinearity=tf.nn.tanh,
         )
 
-        action_noise = OUStrategy(env.spec, policy, sigma=0.2)
+        exploration_policy = OUPolicy(env.spec, policy, sigma=0.2)
 
         qf = ContinuousMLPQFunction(
             env_spec=env.spec,
@@ -67,7 +67,7 @@ def run_task(snapshot_config, *_):
             max_path_length=100,
             n_train_steps=40,
             discount=0.9,
-            exploration_strategy=action_noise,
+            exploration_policy=exploration_policy,
             policy_optimizer=tf.compat.v1.train.AdamOptimizer,
             qf_optimizer=tf.compat.v1.train.AdamOptimizer,
             buffer_batch_size=256,

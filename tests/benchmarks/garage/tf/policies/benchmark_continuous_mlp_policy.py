@@ -12,7 +12,7 @@ import tensorflow as tf
 
 from garage.envs import normalize
 from garage.experiment import deterministic
-from garage.np.exploration_strategies import OUStrategy
+from garage.np.exploration_policies import OUPolicy
 from garage.replay_buffer import SimpleReplayBuffer
 from garage.tf.algos import DDPG
 from garage.tf.envs import TfEnv
@@ -118,7 +118,7 @@ def run_garage(env, seed, log_dir):
             hidden_nonlinearity=tf.nn.relu,
             output_nonlinearity=tf.nn.tanh)
 
-        action_noise = OUStrategy(env.spec, policy, sigma=params['sigma'])
+        exploration_policy = OUPolicy(env.spec, policy, sigma=params['sigma'])
 
         qf = ContinuousMLPQFunction(env_spec=env.spec,
                                     hidden_sizes=params['qf_hidden_sizes'],
@@ -141,7 +141,7 @@ def run_garage(env, seed, log_dir):
                     n_train_steps=params['n_train_steps'],
                     discount=params['discount'],
                     min_buffer_size=int(1e4),
-                    exploration_strategy=action_noise,
+                    exploration_policy=exploration_policy,
                     policy_optimizer=tf.compat.v1.train.AdamOptimizer,
                     qf_optimizer=tf.compat.v1.train.AdamOptimizer)
 

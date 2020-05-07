@@ -7,10 +7,10 @@ transitions. And OU process is relatively smooth in time.
 """
 import numpy as np
 
-from garage.np.exploration_strategies.base import ExplorationStrategy
+from garage.np.exploration_policies.exploration_policy import ExplorationPolicy
 
 
-class OUStrategy(ExplorationStrategy):
+class OUPolicy(ExplorationPolicy):
     r"""An exploration strategy based on the Ornstein-Uhlenbeck process.
 
     The process is governed by the following stochastic differential equation.
@@ -19,7 +19,7 @@ class OUStrategy(ExplorationStrategy):
        dx_t = -\theta(\mu - x_t)dt + \sigma \sqrt{dt} \mathcal{N}(\mathbb{0}, \mathbb{1})  # noqa: E501
 
     Args:
-        env_spec (EnvSpec): Environment for OUStrategy to explore.
+        env_spec (EnvSpec): Environment for OUPolicy to explore.
         policy (garage.Policy): Policy to wrap.
         mu (float): :math:`\mu` parameter of this OU process. This is the drift
             component.
@@ -86,7 +86,7 @@ class OUStrategy(ExplorationStrategy):
             observation (np.ndarray): Observation from the environment.
 
         Returns:
-            np.ndarray: An action with noise explored by OUStrategy.
+            np.ndarray: An action with noise explored by OUPolicy.
             dict: Arbitrary policy state information (agent_info).
 
         """
@@ -102,7 +102,7 @@ class OUStrategy(ExplorationStrategy):
             observations (np.ndarray): Observation from the environment.
 
         Returns:
-            np.ndarray: Actions with noise explored by OUStrategy.
+            np.ndarray: Actions with noise explored by OUPolicy.
             List[dict]: Arbitrary policy state information (agent_info).
 
         """

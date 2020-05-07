@@ -6,7 +6,7 @@ Here it creates a gym environment CartPole, and trains a DQN with 50k steps.
 import gym
 
 from garage.experiment import run_experiment
-from garage.np.exploration_strategies import EpsilonGreedyStrategy
+from garage.np.exploration_policies import EpsilonGreedyPolicy
 from garage.replay_buffer import SimpleReplayBuffer
 from garage.tf.algos import DQN
 from garage.tf.envs import TfEnv
@@ -35,17 +35,16 @@ def run_task(snapshot_config, *_):
                                            time_horizon=1)
         qf = DiscreteMLPQFunction(env_spec=env.spec, hidden_sizes=(64, 64))
         policy = DiscreteQfDerivedPolicy(env_spec=env.spec, qf=qf)
-        epilson_greedy_strategy = EpsilonGreedyStrategy(
-            env_spec=env.spec,
-            policy=policy,
-            total_timesteps=num_timesteps,
-            max_epsilon=1.0,
-            min_epsilon=0.02,
-            decay_ratio=0.1)
+        exploration_policy = EpsilonGreedyPolicy(env_spec=env.spec,
+                                                 policy=policy,
+                                                 total_timesteps=num_timesteps,
+                                                 max_epsilon=1.0,
+                                                 min_epsilon=0.02,
+                                                 decay_ratio=0.1)
         algo = DQN(env_spec=env.spec,
                    policy=policy,
                    qf=qf,
-                   exploration_strategy=epilson_greedy_strategy,
+                   exploration_policy=exploration_policy,
                    replay_buffer=replay_buffer,
                    steps_per_epoch=steps_per_epoch,
                    qf_lr=1e-4,
