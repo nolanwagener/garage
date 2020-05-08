@@ -1,6 +1,5 @@
 """Benchmarking for algorithms."""
 from baselines.bench import benchmarks
-from benchmarks import benchmark, iterate_experiments
 from benchmarks.experiments.algos import ddpg_garage_tf
 from benchmarks.experiments.algos import her_garage_tf
 from benchmarks.experiments.algos import ppo_garage_pytorch
@@ -10,6 +9,7 @@ from benchmarks.experiments.algos import trpo_garage_pytorch
 from benchmarks.experiments.algos import trpo_garage_tf
 from benchmarks.experiments.algos import vpg_garage_pytorch
 from benchmarks.experiments.algos import vpg_garage_tf
+from benchmarks.helper import benchmark, iterate_experiments
 from benchmarks.parameters import MuJoCo1M_ENV_SET
 
 
