@@ -61,6 +61,7 @@ EXTRAS['dev'] = [
     'flake8',
     'flake8-docstrings>=1.5.0',
     'flake8-import-order',
+    'google-cloud-storage',
     'gtimer',
     'matplotlib',
     'metaworld @ https://{}@api.github.com/repos/rlworkgroup/metaworld/tarball/861ae8d8c4bef80a7ed86f47f47acaa494d4ab77'.format(GARAGE_GH_TOKEN),  # noqa: E501
