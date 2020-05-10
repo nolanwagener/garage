@@ -1,12 +1,11 @@
 """Benchmarking experiments for baselines."""
-from benchmarks.experiments.baselines.continuous_mlp_baseline_tf import (
-    continuous_mlp_baseline_tf)
-from benchmarks.experiments.baselines.gaussian_cnn_baseline_tf import (
-    gaussian_cnn_baseline_tf)
-from benchmarks.experiments.baselines.gaussian_mlp_baseline_tf import (
-    gaussian_mlp_baseline_tf)
+from benchmarks.experiments.baselines.continuous_mlp_baseline import (
+    continuous_mlp_baseline)
+from benchmarks.experiments.baselines.gaussian_cnn_baseline import (
+    gaussian_cnn_baseline)
+from benchmarks.experiments.baselines.gaussian_mlp_baseline import (
+    gaussian_mlp_baseline)
 
 __all__ = [
-    'continuous_mlp_baseline_tf', 'gaussian_cnn_baseline_tf',
-    'gaussian_mlp_baseline_tf'
+    'continuous_mlp_baseline', 'gaussian_cnn_baseline', 'gaussian_mlp_baseline'
 ]

@@ -6,3 +6,12 @@ MuJoCo1M_ENV_SET = [
 ]
 
 PIXEL_ENV_SET = ['CubeCrash-v0', 'MemorizeDigits-v0']
+
+STATE_ENV_SET = [
+    'LunarLander-v2',
+    'Assault-ramDeterministic-v4',
+    'Breakout-ramDeterministic-v4',
+    'ChopperCommand-ramDeterministic-v4',
+    'Tutankham-ramDeterministic-v4',
+    'CartPole-v1',
+]
