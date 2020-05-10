@@ -144,13 +144,17 @@ class ContinuousCNNQFunction(QFunction):
         self._initialize()
 
     def _initialize(self):
-        obs_ph = tf.compat.v1.placeholder(tf.float32, (None, ) + self._obs_dim,
-                                          name='state')
+        
         action_ph = tf.compat.v1.placeholder(tf.float32,
                                              (None, ) + self._action_dim,
                                              name='action')
         if isinstance(self._env_spec.observation_space, akro.Image):
-            obs_ph = obs_ph / 255.0
+            obs_ph = tf.compat.v1.placeholder(tf.uint8, (None, ) + self._obs_dim,
+                                          name='state')
+            obs_ph = tf.cast(obs_ph, tf.float32) / 255.0
+        else:
+            obs_ph = tf.compat.v1.placeholder(tf.float32, (None, ) + self._obs_dim,
+                                          name='state')
 
         with tf.compat.v1.variable_scope(self.name) as vs:
             self._variable_scope = vs
@@ -183,11 +187,10 @@ class ContinuousCNNQFunction(QFunction):
                 corresponding to each (obs, act) pair.
 
         """
-        if isinstance(self._env_spec.observation_space, akro.Image):
-            if len(observation.shape) <= 3:
-                observation = self._env_spec.observation_space.unflatten(
-                    observation)
-            observation = observation / 255.0
+        if len(observation.shape) < len(self._obs_dim):
+            observation = self._env_spec.observation_space.unflatten(
+                observation)
+        
         return self._f_qval(observation, action)
 
     # pylint: disable=arguments-differ
@@ -207,7 +210,7 @@ class ContinuousCNNQFunction(QFunction):
         """
         with tf.compat.v1.variable_scope(self._variable_scope):
             if isinstance(self._env_spec.observation_space, akro.Image):
-                state_input /= 255.0
+                state_input = tf.cast(state_input, tf.float32) / 255.0
             return self.model.build(state_input, action_input, name=name)
 
     def clone(self, name):
